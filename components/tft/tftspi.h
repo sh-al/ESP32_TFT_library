@@ -34,7 +34,8 @@
 #define DISP_TYPE_ST7735	3
 #define DISP_TYPE_ST7735R	4
 #define DISP_TYPE_ST7735B	5
-#define DISP_TYPE_MAX		6
+#define DISP_TYPE_ST7789V_TTGO	6
+#define DISP_TYPE_MAX		7
 
 #if CONFIG_EXAMPLE_DISPLAY_TYPE == 1
 
@@ -123,6 +124,40 @@
 #define PIN_BCKL_ON  1  	// GPIO value for backlight ON
 #define PIN_BCKL_OFF 0  	// GPIO value for backlight OFF
 // ---------------------------------------------------------
+#elif CONFIG_EXAMPLE_DISPLAY_TYPE == 4
+
+// configuration for TTGO T display
+#define TTGO_T_DISPLAY
+
+#define DEFAULT_DISP_TYPE   DISP_TYPE_ST7789V_TTGO
+#define PIN_NUM_MISO 23		// SPI MISO
+#define PIN_NUM_MOSI 19		// SPI MOSI
+#define PIN_NUM_CLK  18		// SPI CLOCK pin
+#define PIN_NUM_CS   5		// Display CS pin
+#define PIN_NUM_DC   16		// Display command/data pin
+#define PIN_NUM_TCS  25		// Touch screen CS pin (NOT used if USE_TOUCH=0)
+
+#define PIN_NUM_RST  23 	// GPIO used for RESET control
+
+#define PIN_NUM_BCKL 4  	// GPIO used for backlight control
+#define PIN_BCKL_ON  1  	// GPIO value for backlight ON
+#define PIN_BCKL_OFF 0  	// GPIO value for backlight OFF
+
+#define USE_TOUCH	TOUCH_TYPE_NONE
+
+#define DEFAULT_TFT_DISPLAY_WIDTH  135
+#define DEFAULT_TFT_DISPLAY_HEIGHT 240
+
+#define DEFAULT_GAMMA_CURVE 0
+#define DEFAULT_SPI_CLOCK   26000000
+
+
+#define TFT_INVERT_ROTATION 0
+#define TFT_INVERT_ROTATION1 1
+#define TFT_INVERT_ROTATION2 0
+#define TFT_RGB_BGR 0x00
+
+#define DISP_COLOR_BITS_24	0x66
 
 #else
 
@@ -349,6 +384,35 @@ static const uint8_t ST7789V_init[] = {
   TFT_CMD_GMCTRN1, 14, 0xD0, 0x00, 0x05, 0x0D, 0x0C, 0x06, 0x2D, 0x44, 0x40, 0x0E, 0x1C, 0x18, 0x16, 0x19,
   TFT_MADCTL, 1, (MADCTL_MX | TFT_RGB_BGR),			// Memory Access Control (orientation)
   TFT_CMD_PIXFMT, 1, DISP_COLOR_BITS_24,            // *** INTERFACE PIXEL FORMAT: 0x66 -> 18 bit; 0x55 -> 16 bit
+  TFT_CMD_SLPOUT, TFT_CMD_DELAY, 120,				//  Sleep out,	//  120 ms delay
+  TFT_DISPON, TFT_CMD_DELAY, 120,
+};
+
+static const uint8_t ST7789_TTGO_init[] = {
+#if PIN_NUM_RST
+  19,                   					        // 19 commands in list
+#else
+  16,                   					        // 16 commands in list
+  TFT_CMD_SWRESET, TFT_CMD_DELAY,					//  1: Software reset, no args, w/delay
+  200,												//     200 ms delay
+#endif
+  TFT_CMD_FRMCTR2, 5, 0x0c, 0x0c, 0x00, 0x33, 0x33,
+  TFT_ENTRYM, 1, 0x45,
+  ST_CMD_VCOMS, 1, 0x28,  //ST7789V Power setting
+  TFT_CMD_PWCTR1, 1, 0x2C,
+  TFT_CMD_PWCTR3, 2, 0x01, 0xff,
+  TFT_CMD_PWCTR4, 1, 0x10,
+  TFT_CMD_PWCTR5, 1, 0x20,
+  ST_CMD_FRCTRL2, 1, 0x0f,
+  ST_CMD_PWCTR1, 2, 0xA4, 0xA1,
+
+  TFT_CMD_GMCTRP1, 14, 0xD0, 0x00, 0x05, 0x0E, 0x15, 0x0D, 0x37, 0x43, 0x47, 0x09, 0x15, 0x12, 0x16, 0x19,
+  TFT_CMD_GMCTRN1, 14, 0xD0, 0x00, 0x05, 0x0D, 0x0C, 0x06, 0x2D, 0x44, 0x40, 0x0E, 0x1C, 0x18, 0x16, 0x19,
+  0x21, 0, //inversion on
+  TFT_MADCTL, 1, (MADCTL_MX | TFT_RGB_BGR),			// Memory Access Control (orientation)
+  TFT_CMD_PIXFMT, 1, DISP_COLOR_BITS_24,            // *** INTERFACE PIXEL FORMAT: 0x66 -> 18 bit; 0x55 -> 16 bit
+  0x2a, 4, 0xFF, 0xFF, 0x00, 0xE5, // column address set
+  0x2b, 4, 0xFF, 0xFF, 0x00, 0x3F, // row address set
   TFT_CMD_SLPOUT, TFT_CMD_DELAY, 120,				//  Sleep out,	//  120 ms delay
   TFT_DISPON, TFT_CMD_DELAY, 120,
 };

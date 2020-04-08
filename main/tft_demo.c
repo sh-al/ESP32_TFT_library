@@ -1255,6 +1255,7 @@ void app_main()
 	//tft_disp_type = DISP_TYPE_ILI9341;
 	//tft_disp_type = DISP_TYPE_ILI9488;
 	//tft_disp_type = DISP_TYPE_ST7735B;
+	//tft_disp_type = DISP_TYPE_ST7789V;
     // ===================================================
 
 	// ===================================================

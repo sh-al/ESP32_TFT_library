@@ -7,11 +7,12 @@
 
 If you are using the esp-idf v2.1, checkout the commit *0518df81a6566820352dad7bf6c539995d41ad18*
 
+this is a fork of ![ESP32_TFT_library](https://github.com/loboris/ESP32_TFT_library) with added support for TTGO-T-Display board
 ---
 
 #### Features
 
-* Full support for **ILI9341**, **ILI9488**, **ST7789V** and **ST7735** based TFT modules in 4-wire SPI mode. Support for other controllers will be added later
+* Full support for **ILI9341**, **ILI9488**, **ST7789V**, **ST7789** and **ST7735** based TFT modules in 4-wire SPI mode. Support for other controllers will be added later
 * **18-bit (RGB)** color mode used
 * **SPI displays oriented SPI driver library** based on *spi-master* driver
 * Combined **DMA SPI** transfer mode and **direct SPI** for maximal speed
@@ -178,7 +179,19 @@ To run the demo, attach ILI9341, ILI9488 or ST7735 based display module to ESP32
 
 Also set **TFT_RGB_BGR** to 0x00 and **TFT_INVERT_ROTATION1** to 1 in *tftspi.h*
 
-**You can also select EXAMPLE_ESP_WROVER_KIT in menuconfig to automaticaly define correct configuration**
+
+*To run the demo on* **TTGO-T-Display** *select the following pin configuration:*
+*  mosi: 19
+*  miso: n/a
+*   sck: 18
+*    CS: 5 (display CS)
+*    DC: 16 (display DC)
+*   TCS: n/a (touch screen CS), not used
+*   RST: 23 (display RESET)
+* BKLIT: 4 (Display Back light)
+
+
+**You can also select EXAMPLE_ESP_WROVER_KIT or TTGO-T-Display in menuconfig to automaticaly define correct configuration**
 
 ---
 
@@ -373,6 +386,9 @@ Send color buffer time: 228 us (240 pixels)
 ---
 
 ### Tested on
+
+1.14" TTGO-T-Display, ST7789 controller, 135x240
+![Tested on](https://github.com/Xinyuan-LilyGO/TTGO-T-Display)
 
 ESP32-WROVER-KIT v3, ST7789V controller, 240x320
 ![Tested on](https://raw.githubusercontent.com/loboris/MicroPython_ESP32_psRAM_LoBo/master/Documents/disp_wrower-kit.jpg)

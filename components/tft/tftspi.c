@@ -14,10 +14,14 @@
 #include "freertos/task.h"
 #include "esp_heap_caps.h"
 #include "soc/spi_reg.h"
-
+#include "driver/gpio.h"
 
 // ====================================================
 // ==== Global variables, default values ==============
+#ifdef TTGO_T_DISPLAY
+//offset fo TTGO 135x240
+uint8_t xOffset=0, yOffset=0;
+#endif
 
 // Converts colors to grayscale if set to 1
 uint8_t gray_scale = 0;
@@ -175,6 +179,13 @@ void IRAM_ATTR disp_spi_transfer_cmd_data(int8_t cmd, uint8_t *data, uint32_t le
 //---------------------------------------------------------------------------------------------------
 static void IRAM_ATTR disp_spi_transfer_addrwin(uint16_t x1, uint16_t x2, uint16_t y1, uint16_t y2) {
 	uint32_t wd;
+
+#ifdef TTGO_T_DISPLAY
+	x1+=xOffset;
+	x2+=xOffset;
+	y1+=yOffset;
+	y2+=yOffset;
+#endif
 
     taskDISABLE_INTERRUPTS();
 	// Wait for SPI bus ready
@@ -785,6 +796,32 @@ void _tft_setRotation(uint8_t rot) {
             _height = tmp;
         }
     }
+
+#ifdef TTGO_T_DISPLAY
+	switch (rotation)
+	{
+	case PORTRAIT:
+		xOffset=53;
+		yOffset=40;
+		break;
+	case PORTRAIT_FLIP:
+		xOffset=52;
+		yOffset=40;
+		break;
+	
+	case LANDSCAPE:
+		xOffset=40;
+		yOffset=52;
+		break;
+
+	case LANDSCAPE_FLIP:
+		xOffset=40;
+		yOffset=53;
+		break;
+	}
+#endif
+
+
     #if TFT_INVERT_ROTATION
     switch (rotation) {
         case PORTRAIT:
@@ -911,6 +948,9 @@ void TFT_display_init()
 	}
 	else if (tft_disp_type == DISP_TYPE_ILI9488) {
 		commandList(disp_spi, ILI9488_init);
+	}
+	else if (tft_disp_type == DISP_TYPE_ST7789V_TTGO) {
+		commandList(disp_spi, ST7789_TTGO_init);
 	}
 	else if (tft_disp_type == DISP_TYPE_ST7789V) {
 		commandList(disp_spi, ST7789V_init);
