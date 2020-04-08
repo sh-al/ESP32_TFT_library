@@ -20,6 +20,7 @@ GPATH
 sdkconfig
 sdkconfig.old
 sdkconfig.lobo
+.vscode
 .cproject
 .project
 .settings
