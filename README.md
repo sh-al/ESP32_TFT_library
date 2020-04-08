@@ -7,7 +7,7 @@
 
 If you are using the esp-idf v2.1, checkout the commit *0518df81a6566820352dad7bf6c539995d41ad18*
 
-this is a fork of [ESP32_TFT_library](https://github.com/loboris/ESP32_TFT_library) with added support for TTGO-T-Display board
+this is a fork of [ESP32_TFT_library](https://github.com/loboris/ESP32_TFT_library) with added support for [TTGO-T-Display](https://github.com/Xinyuan-LilyGO/TTGO-T-Display) board
 
 ---
 
